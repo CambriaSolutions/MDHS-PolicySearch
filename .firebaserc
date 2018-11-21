@@ -1,0 +1,17 @@
+{
+  "projects": {
+    "default": "mdhs-policysearch"
+  },
+  "targets": {
+    "mdhs-policysearch": {
+      "hosting": {
+        "search": [
+          "mdhs-policysearch"
+        ],
+        "management": [
+          "mdhs-policysearch-management"
+        ]
+      }
+    }
+  }
+}

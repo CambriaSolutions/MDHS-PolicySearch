@@ -1,0 +1,30 @@
+{
+  "name": "document-parser",
+  "description": "Handles parsing PDFs and generating individual pages and thumbnails",
+  "version": "0.0.1",
+  "private": true,
+  "license": "",
+  "author": "Tom Herbert",
+  "engines": {
+    "node": "8"
+  },
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint --max-warnings=10 .",
+    "deploy": "gcloud app deploy",
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "child-process-promise": "^2.2.1",
+    "express": "^4.16.3",
+    "firebase-admin": "^6.1.0",
+    "lodash": "^4.17.11",
+    "mkdirp-promise": "^5.0.1",
+    "p-limit": "^2.0.0",
+    "pdfjs-dist": "^2.0.943"
+  },
+  "devDependencies": {
+    "eslint": "^5.8.0",
+    "eslint-plugin-promise": "^4.0.1"
+  }
+}
