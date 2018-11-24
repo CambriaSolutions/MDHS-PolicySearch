@@ -5,7 +5,7 @@ import {
   INITIAL_LOAD_COMPLETE,
 } from './actionTypes'
 import 'whatwg-fetch'
-import { db } from '../firebase'
+import { storage } from '../firebase'
 
 export function addPageToSearchResults(page) {
   return (dispatch, getState) => {
@@ -20,34 +20,69 @@ export function getStorageUrlForPage(docName, pageNum) {
   if (docName && pageNum) {
     // remove file extension
     const fileName = docName.replace(/\.[^/.]+$/, '')
-
-    const fireStoreCollectionDoc = db
-      .collection('documents')
-      .doc(`${fileName}/pages/pg-${pageNum}`)
-
-    return fireStoreCollectionDoc
-      .get()
-      .then(doc => {
-        if (!doc.exists) {
-          console.error('Document does not exist')
-          return {
-            pdfUrl: '',
-            thumbUrl: '',
-          }
-        } else {
-          return {
-            pdfUrl: doc.data().pdfUrl,
-            thumbUrl: doc.data().thumbUrl,
-          }
+    const pdfRef = storage.ref(`output/${fileName}/${pageNum}.pdf`)
+    const thumbRef = storage.ref(`output/${fileName}/thumb_${pageNum}.png`)
+    return Promise.all([pdfRef.getDownloadURL(), thumbRef.getDownloadURL()])
+      .then(results => {
+        return {
+          pdfUrl: results[0],
+          thumbUrl: results[1],
         }
       })
       .catch(error => {
-        console.log(error)
-        return {
-          pdfUrl: '',
-          thumbUrl: '',
+        switch (error.code) {
+          case 'storage/object_not_found':
+            // File doesn't exist
+            console.log(`${docName} pg. ${pageNum} doesn't exist`)
+            break
+
+          case 'storage/unauthorized':
+            // User doesn't have permission to access the object
+            console.log(`User doesn't have permission`)
+            break
+          case 'storage/canceled':
+            // User canceled the upload
+            console.log('User canceled')
+            break
+
+          case 'storage/unknown':
+            // Unknown error occurred, inspect the server response
+            console.log('Unknown error in storage')
+            break
+
+          default:
+            console.log('Unknown error in storage')
+            break
         }
       })
+
+    // const fireStoreCollectionDoc = db
+    //   .collection('documents')
+    //   .doc(`${fileName}/pages/pg-${pageNum}`)
+
+    // return fireStoreCollectionDoc
+    //   .get()
+    //   .then(doc => {
+    //     if (!doc.exists) {
+    //       console.error('Document does not exist')
+    //       return {
+    //         pdfUrl: '',
+    //         thumbUrl: '',
+    //       }
+    //     } else {
+    //       return {
+    //         pdfUrl: doc.data().pdfUrl,
+    //         thumbUrl: doc.data().thumbUrl,
+    //       }
+    //     }
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //     return {
+    //       pdfUrl: '',
+    //       thumbUrl: '',
+    //     }
+    //   })
   } else {
     return new Promise(function(resolve, reject) {
       resolve({ pdfUrl: '', thumbUrl: '' })
