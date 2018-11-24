@@ -214,7 +214,6 @@ class PdfPage extends PureComponent {
       ? 'No results found for that query'
       : 'Enter search term'
     const loadingSpinner = <Spinner size={80} />
-    console.log(currentPageUrl)
     const documentElement = (
       <Document noData={noDataTerm} file={currentPageUrl} renderMode="svg">
         <Page
