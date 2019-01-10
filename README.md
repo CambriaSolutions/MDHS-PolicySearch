@@ -20,6 +20,13 @@
 16. Deploy the parser with `gcloud deploy`
 17. After deployment, in the Google Cloud web console, upgrade each cloud function and the app engine to the appripriate tier.
 
+## Development and production environments
+
+Firebase requires separate projects to [host multiple environments](https://firebase.google.com/docs/projects/multiprojects) for the interface and functions.
+
+To differentiate between the two, use the command `firebase use -P *environment*` prior to any
+running `firebase deploy` as detailed above.
+
 ## Files to update prior to deployment
 
 #### Top-level
