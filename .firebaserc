@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "mdhs-policysearch",
+    "production": "mdhs-policysearch",
     "development": "mdhs-policysearch-dev"
   },
   "targets": {

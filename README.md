@@ -1,4 +1,4 @@
-# documentsearch
+# MDHS PolicySearch
 
 ## Deployment Instructions
 
@@ -24,8 +24,27 @@
 
 Firebase requires separate projects to [host multiple environments](https://firebase.google.com/docs/projects/multiprojects) for the interface and functions.
 
-To differentiate between the two, use the command `firebase use -P *environment*` prior to any
-running `firebase deploy` as detailed above.
+To manually switch between the two, use the command `firebase use -P *environment*`.
+
+### Scripts
+
+`deploy-dev-search`: deploy only search interface to development project  
+`deploy-dev-management`: deploy only management interface to development project  
+`deploy-prod-search`: deploy only search interface to production project  
+`deploy-prod-management`: deploy only management interface to production project  
+`deploy-prod-all`: deploy both search and management intefaces to production environment
+
+### Firebase commands
+
+`firebase deploy`: creates a release for all deployable resources  
+`--only hosting`: deploys only the files for the hosted ui  
+`--only hosting:search`: deploys only the files for the ui associated with the search interface  
+`--only hosting:management`: deploys only the files for the ui associated with the management interface  
+`--project development`: targets the deployment to the development project  
+`--project production`: targets the deployment to the production project
+
+The commands are run in the same line via cli. For example `deploy-dev-search`  
+contains the following script: `firebase deploy --only hosting:search --project development`
 
 ## Files to update prior to deployment
 
