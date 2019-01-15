@@ -135,7 +135,7 @@ class MatchSummary extends PureComponent {
         <LogoBar sideBarOpen={sideBarOpen}>
           {/* <Logo src={mdhsLogo} alt={'MDHS'} /> */}
           {sideBarOpen ? (
-            <LogoHeader>Policy Search Results</LogoHeader>
+            <LogoHeader>Search Results</LogoHeader>
           ) : (
             <SmallLogoHeader>Results</SmallLogoHeader>
           )}
