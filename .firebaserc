@@ -1,6 +1,7 @@
 {
   "projects": {
-    "default": "mdhs-policysearch"
+    "production": "mdhs-policysearch",
+    "development": "mdhs-policysearch-dev"
   },
   "targets": {
     "mdhs-policysearch": {
@@ -10,6 +11,16 @@
         ],
         "management": [
           "mdhs-policysearch-management"
+        ]
+      }
+    },
+    "mdhs-policysearch-dev": {
+      "hosting": {
+        "search": [
+          "mdhs-policysearch-dev"
+        ],
+        "management": [
+          "mdhs-policysearch-management-dev"
         ]
       }
     }

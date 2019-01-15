@@ -25,7 +25,12 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "test:coverage": "yarn test --coverage --silent --updateSnapshot"
+    "test:coverage": "yarn test --coverage --silent --updateSnapshot",
+    "deploy-dev-search": "firebase deploy --only hosting:search --project development",
+    "deploy-dev-management": "firebase deploy --only hosting:management --project development",
+    "deploy-prod-search": "firebase deploy --only hosting:search --project production",
+    "deploy-prod-management": "firebase deploy --only hosting:management --project production",
+    "deploy-prod-all": "firebase deploy --only hosting --project production"
   },
   "devDependencies": {
     "husky": "^1.1.4",
