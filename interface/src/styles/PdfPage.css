@@ -4,3 +4,8 @@
   text-align: center;
   padding: 24px;
 }
+
+.react-pdf__Page__textContent mark {
+  color: transparent;
+  background: rgba(33, 150, 243, 0.25);
+}

@@ -3,14 +3,6 @@ import 'firebase/firestore'
 // import 'firebase/auth'
 import 'firebase/storage'
 import config from './firebaseconfig.json'
-// const config = {
-//   apiKey: 'AIzaSyCxePrYE2Ig89QiwmIdsz2wIcUe8zh5s1s',
-//   authDomain: 'documentsearch-b1881.firebaseapp.com',
-//   databaseURL: 'https://documentsearch-b1881.firebaseio.com',
-//   projectId: 'documentsearch-b1881',
-//   storageBucket: 'documentsearch-b1881.appspot.com',
-//   messagingSenderId: '485126896861',
-// }
 firebase.initializeApp(config)
 
 const storage = firebase.storage()
@@ -29,4 +21,4 @@ const storage = firebase.storage()
 const db = firebase.firestore()
 // const auth = firebase.auth()
 
-export { db, firebase, storage }
+export { db, storage, firebase }

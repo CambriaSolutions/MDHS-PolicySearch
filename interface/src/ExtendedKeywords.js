@@ -33,11 +33,9 @@ const HeaderBar = styled.div`
 
 const Header = styled(Typography)`
   && {
-    padding-left: 2px;
-    flex: 1 0 24px;
-    max-height: 24px;
-    font-size: 14px;
-    line-height: 24px;
+    flex: 1 0 28px;
+    max-height: 28px;
+    line-height: 28px;
     color: rgba(255, 255, 255, 0.7);
     width: 100%;
   }
@@ -124,7 +122,7 @@ class MatchSummary extends PureComponent {
     return (
       <Container>
         <HeaderBar onClick={this.toggleOpen}>
-          <Header>Extended Keywords</Header>
+          <Header variant="subtitle2">Extended Keywords</Header>
           <ArrowUp active={this.state.open ? 'active' : 'inactive'} />
         </HeaderBar>
         <ChipArray active={showChips ? 'active' : 'inactive'}>

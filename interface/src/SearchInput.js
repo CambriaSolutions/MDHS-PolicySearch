@@ -16,18 +16,13 @@ const SearchBox = styled(FilledInput)`
     > input {
       padding: 12px 12px 12px 0;
     }
-    &::before {
-      display: none;
-    }
-    &::after {
-      display: none;
-    }
   }
 `
 function MyComponent(props) {
   return (
     <SearchBox
       fullWidth
+      disableUnderline
       margin="dense"
       placeholder="Ask me a question!"
       type="search"
