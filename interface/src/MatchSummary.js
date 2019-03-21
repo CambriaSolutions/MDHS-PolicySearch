@@ -26,7 +26,7 @@ const LogoBar = styled.div`
   flex-flow: row nowrap;
   justify-content: flex-start;
   align-items: center;
-  padding: ${p => (p.sideBarOpen ? '12px 24px' : '12px')};
+  padding: ${p => (p.sideBarOpen ? '16px 24px' : '12px')};
   min-height: 48px;
   font-family: 'Google Sans', sans-serif;
 `
@@ -59,11 +59,9 @@ const Divider = styled.div`
 
 const Header = styled(Typography)`
   && {
-    padding-left: 2px;
-    flex: 1 0 24px;
-    max-height: 24px;
-    font-size: 14px;
-    line-height: 24px;
+    flex: 1 0 28px;
+    max-height: 28px;
+    line-height: 28px;
     color: rgba(255, 255, 255, 0.7);
     width: 100%;
   }
@@ -71,13 +69,12 @@ const Header = styled(Typography)`
 
 const LogoHeader = styled(Header)`
   && {
+    color: #fff;
     font-family: 'Google Sans', 'sans-serif';
-    font-size: 18px;
   }
 `
 const SmallLogoHeader = styled(LogoHeader)`
   && {
-    font-size: 16px;
   }
 `
 
@@ -135,16 +132,16 @@ class MatchSummary extends PureComponent {
         <LogoBar sideBarOpen={sideBarOpen}>
           {/* <Logo src={mdhsLogo} alt={'MDHS'} /> */}
           {sideBarOpen ? (
-            <LogoHeader>Search Results</LogoHeader>
+            <LogoHeader variant="h6">Search Results</LogoHeader>
           ) : (
-            <SmallLogoHeader>Results</SmallLogoHeader>
+            <SmallLogoHeader variant="subtitle2">Results</SmallLogoHeader>
           )}
         </LogoBar>
         <Divider />
         {sideBarOpen ? (
           <React.Fragment>
             <KeywordsContainer>
-              <Header>Keywords</Header>
+              <Header variant="subtitle2">Keywords</Header>
               {keywordChips.length > 0 ? (
                 <ChipArray>{keywordChips}</ChipArray>
               ) : null}
@@ -153,7 +150,7 @@ class MatchSummary extends PureComponent {
             <ExtendedKeywords />
             <Divider />
             <MatchBar>
-              <Header>{numMatches} matches</Header>
+              <Header variant="subtitle2">{numMatches} matches</Header>
             </MatchBar>
           </React.Fragment>
         ) : null}

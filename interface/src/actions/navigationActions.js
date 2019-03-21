@@ -4,6 +4,8 @@ import {
   UPDATE_KEYWORDS_TO_HIGHLIGHT,
   TOGGLE_SIDEBAR_DISPLAY,
   SHOW_LOADING_SPINNER,
+  TOGGLE_SNACKBAR_OPEN,
+  TOGGLE_SNACKBAR_CLOSED,
 } from './actionTypes'
 
 import find from 'lodash/find'
@@ -72,8 +74,9 @@ export function incrementPageNumber() {
     if (!currentPage) {
       return
     }
+
     const currentPageNum = parseInt(currentPage.pageNumber, 10)
-    // TODO -- figure out how to get numPages
+
     // const newPageNum = Math.min(currentPage.pageNumber + 1, state.numPages)
     const newPageNum = currentPageNum + 1
 
@@ -156,6 +159,19 @@ export function decrementPageNumber() {
 export function toggleSidebarDisplay() {
   return {
     type: TOGGLE_SIDEBAR_DISPLAY,
+  }
+}
+
+export function toggleSnackbarOpen(message) {
+  return {
+    type: TOGGLE_SNACKBAR_OPEN,
+    message: message,
+  }
+}
+
+export function toggleSnackbarClosed() {
+  return {
+    type: TOGGLE_SNACKBAR_CLOSED,
   }
 }
 

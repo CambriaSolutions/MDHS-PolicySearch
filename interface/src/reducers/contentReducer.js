@@ -10,6 +10,9 @@ const initialState = {
   loadedPageData: [],
   sideBarOpen: true,
   isLoading: false,
+  showSnackBar: false,
+  errorMessage: '',
+  documentDownloadUrls: [],
 }
 
 function content(state = initialState, action) {
@@ -88,6 +91,30 @@ function content(state = initialState, action) {
       }
 
       return { ...state, keywordsToHighlight: updatedKeywordsList }
+
+    case t.TOGGLE_SNACKBAR_OPEN:
+      const errorMessage = action.message
+      return {
+        ...state,
+        errorMessage: errorMessage,
+        showSnackBar: true,
+      }
+
+    case t.TOGGLE_SNACKBAR_CLOSED:
+      return {
+        ...state,
+        errorMessage: '',
+        showSnackBar: false,
+      }
+
+    case t.SET_DOWNLOAD_URL:
+      const downloadURLData = action.downloadURLData
+      const currentdocumentDownloadUrls = state.documentDownloadUrls
+
+      return {
+        ...state,
+        documentDownloadUrls: [...currentdocumentDownloadUrls, downloadURLData],
+      }
 
     default:
       return state

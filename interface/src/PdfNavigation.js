@@ -3,7 +3,10 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
 import ChevronRight from '@material-ui/icons/ChevronRight'
+import GetAppSharp from '@material-ui/icons/GetAppSharp'
 import Input from '@material-ui/core/Input'
+import Tooltip from '@material-ui/core/Tooltip'
+import ErrorBar from './ErrorBar.js'
 import get from 'lodash/get'
 import isFinite from 'lodash/isFinite'
 import grey from '@material-ui/core/colors/grey'
@@ -13,7 +16,10 @@ import {
   decrementPageNumber,
   updateTempPageNumber,
   findPageByPageNumber,
+  toggleSnackbarOpen,
 } from './actions/navigationActions'
+
+import { saveCurrentDocument } from './actions/dataActions'
 
 const OuterContainer = styled.div`
   padding: 16px;
@@ -36,16 +42,35 @@ const NavigationContainer = styled.div`
   position: relative;
   align-items: center;
 `
+
 const PdfName = styled.div`
   flex: 1;
   font-size: 14px;
   line-height: 24px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding-right: 8px;
 `
 
 const PageNumberElements = styled.div`
   display: flex;
   align-items: center;
   position: right;
+`
+
+const DownloadIcon = styled(GetAppSharp)`
+  && {
+    font-size: 22px;
+    cursor: pointer;
+  }
+`
+
+const Separator = styled.div`
+  height: 24px;
+  margin-left: 16px;
+  margin-right: 12px;
+  border: 0.5px solid lightgrey;
 `
 
 const StyledInput = styled(Input)`
@@ -61,11 +86,13 @@ const StyledInput = styled(Input)`
     }
   }
 `
+
 const NavLeft = styled(ChevronLeft)`
   && {
     cursor: pointer;
   }
 `
+
 const NavRight = styled(ChevronRight)`
   && {
     cursor: pointer;
@@ -76,23 +103,6 @@ class PdfNavigation extends PureComponent {
   constructor(props) {
     super(props)
     this.wrapperRef = React.createRef()
-  }
-
-  componentDidMount = () => {
-    document.addEventListener('mousedown', this.handleClickOutside)
-  }
-
-  componentWillUnmount = () => {
-    document.removeEventListener('mousedown', this.handleClickOutside)
-  }
-
-  handleClickOutside = e => {
-    if (!this.wrapperRef || this.wrapperRef.current === null) {
-      return
-    }
-    if (this.wrapperRef && !this.wrapperRef.current.contains(e.target)) {
-      this.submitPageNumberChange()
-    }
   }
 
   handleInputChange = e => {
@@ -115,6 +125,21 @@ class PdfNavigation extends PureComponent {
     }
   }
 
+  onDownloadClick = async () => {
+    const { currentPage } = this.props
+    const docName = get(currentPage, 'fileName', '')
+    if (docName) {
+      try {
+        this.props.saveCurrentDocument(docName)
+      } catch (error) {
+        console.log(error)
+        this.props.toggleSnackBarOpen('Unable to download the document.')
+      }
+    } else {
+      this.props.toggleSnackBarOpen('No document to download!')
+    }
+  }
+
   render() {
     const {
       currentPage,
@@ -123,6 +148,7 @@ class PdfNavigation extends PureComponent {
       tempEditingPageNumber,
       documentMetadata,
     } = this.props
+
     const fileName = get(currentPage, 'fileName', '').replace(/\.[^/.]+$/, '')
     const description = fileName ? `${fileName}` : 'No PDF Selected'
     let maxPageNumber = 0
@@ -136,6 +162,10 @@ class PdfNavigation extends PureComponent {
       <OuterContainer ref={this.wrapperRef}>
         <NavigationContainer>
           <PdfName>{description}</PdfName>
+          <Tooltip title="Download Current Document">
+            <DownloadIcon onClick={this.onDownloadClick} />
+          </Tooltip>
+          <Separator />
           <PageNumberElements>
             <NavLeft onClick={onPrevPageClick} />
             <StyledInput
@@ -151,6 +181,7 @@ class PdfNavigation extends PureComponent {
             <NavRight onClick={onNextPageClick} />
           </PageNumberElements>
         </NavigationContainer>
+        <ErrorBar />
       </OuterContainer>
     )
   }
@@ -171,6 +202,8 @@ const mapDispatchToProps = {
   onNextPageClick: incrementPageNumber,
   onPrevPageClick: decrementPageNumber,
   onEditPageNumber: updateTempPageNumber,
+  toggleSnackBarOpen: toggleSnackbarOpen,
+  saveCurrentDocument: saveCurrentDocument,
 }
 
 export default connect(

@@ -3,6 +3,7 @@ import * as t from '../actions/actionTypes'
 const initialState = {
   documentMetadata: [],
   initialLoad: false,
+  abortController: null,
 }
 
 function config(state = initialState, action) {
@@ -12,13 +13,18 @@ function config(state = initialState, action) {
         ...state,
         documentMetadata: action.documentMetadata,
       }
-    default:
-      return state
     case t.INITIAL_LOAD_COMPLETE:
       return {
         ...state,
         initialLoad: true,
       }
+    case t.STORE_ABORT_CONTROLLER:
+      return {
+        ...state,
+        abortController: action.abortController,
+      }
+    default:
+      return state
   }
 }
 
