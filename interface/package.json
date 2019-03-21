@@ -28,7 +28,12 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "test:coverage": "yarn test --coverage --silent --updateSnapshot",
-    "postinstall": "cpx node_modules/pdfjs-dist/build/pdf.worker.min.js public"
+    "postinstall": "cpx node_modules/pdfjs-dist/build/pdf.worker.min.js public",
+    "deploy-dev-search": "firebase deploy --only hosting:search --project development",
+    "deploy-dev-management": "firebase deploy --only hosting:management --project development",
+    "deploy-prod-search": "firebase deploy --only hosting:search --project production",
+    "deploy-prod-management": "firebase deploy --only hosting:management --project production",
+    "deploy-prod-all": "firebase deploy --only hosting --project production"
   },
   "devDependencies": {
     "cpx": "^1.5.0",
