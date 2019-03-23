@@ -19,6 +19,8 @@
     "express": "^4.16.3",
     "firebase-admin": "^6.1.0",
     "lodash": "^4.17.11",
+    "mkdirp": "^0.5.1",
+    "firebase-functions": "^2.2.0",
     "mkdirp-promise": "^5.0.1",
     "p-limit": "^2.0.0",
     "pdfjs-dist": "^2.0.943"

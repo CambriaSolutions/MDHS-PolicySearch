@@ -13,7 +13,7 @@ const db = admin.firestore()
 db.settings({ timestampsInSnapshots: true })
 const processPdfPage = require('./processPdfPage')
 const logStatus = require('./logStatus')
-
+const { generateThumbnail } = require('./generateThumbnail.js')
 const app = express()
 
 // parse application/x-www-form-urlencoded
@@ -35,6 +35,7 @@ app.post('/', async (req, res, next) => {
     const extension = path.extname(originalPdfPath)
     const contentType = storageObject.contentType
 
+    generateThumbnail(storageObject)
     // If the uploaded file does not have the PDF content type, ignore it
     if (!contentType.includes('pdf')) {
       return null
@@ -80,8 +81,7 @@ app.post('/', async (req, res, next) => {
 
     fs.unlinkSync(tempLocalFile)
     await logStatus(originalPdfBasename, { processingFinished: 'success' })
-    console.log(`Successfully processed ${originalPdfBasename}`)
-    return
+    return console.log(`Successfully processed ${originalPdfBasename}`)
   } catch (err) {
     console.error(err)
     await logStatus(originalPdfBasename, {
