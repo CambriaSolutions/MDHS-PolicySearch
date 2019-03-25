@@ -7,12 +7,13 @@ const admin = require('firebase-admin')
 const storage = admin.storage()
 const db = admin.firestore()
 const logStatus = require('./logStatus')
+const pdf2png = require('./pdf2png')
 
 async function processPdfPage(pageNum, object) {
   const PDF_EXTENSION = '.pdf'
   const THUMB_PREFIX = 'thumb_'
-  const THUMB_MAX_HEIGHT = 484
-  const THUMB_MAX_WIDTH = 372
+  // const THUMB_MAX_HEIGHT = 484
+  // const THUMB_MAX_WIDTH = 372
   const bucket = storage.bucket(object.bucket)
   const originalPdfPath = object.name
   const originalUploadDir = path.dirname(originalPdfPath)
@@ -20,7 +21,7 @@ async function processPdfPage(pageNum, object) {
   const tempSinglePdf = path.join(os.tmpdir(), `${pageNum}.pdf`)
   const tempSingleThumb = path.join(
     os.tmpdir(),
-    `${THUMB_PREFIX}${pageNum}.png`,
+    `${THUMB_PREFIX}${pageNum}.png`
   )
   const tempLocalFile = path.join(os.tmpdir(), originalPdfPath)
   const contentType = object.contentType
@@ -49,13 +50,13 @@ async function processPdfPage(pageNum, object) {
     originalUploadDir,
     'output',
     originalPdfBasename,
-    `${pageNum}.pdf`,
+    `${pageNum}.pdf`
   )
   const singleThumb = path.join(
     originalUploadDir,
     'output',
     originalPdfBasename,
-    `${THUMB_PREFIX}${pageNum}.png`,
+    `${THUMB_PREFIX}${pageNum}.png`
   )
   console.log(`starting gs for ${pageNum}`)
   // Use Ghostscript to generate single PDF page
@@ -71,23 +72,25 @@ async function processPdfPage(pageNum, object) {
       `-sOutputFile=${tempSinglePdf}`,
       tempLocalFile,
     ],
-    { capture: ['stdout', 'stderr'] },
+    { capture: ['stdout', 'stderr'] }
   )
   await logStatus(`${originalPdfBasename}/pages/pg-${pageNum}`, {
     pdfGeneration: 'success',
   })
 
   console.log(`starting imagemagick for ${pageNum}`)
-  await spawn(
-    'convert',
-    [
-      tempSinglePdf,
-      '-thumbnail',
-      `${THUMB_MAX_WIDTH}x${THUMB_MAX_HEIGHT}>`,
-      tempSingleThumb,
-    ],
-    { capture: ['stdout', 'stderr'] },
-  )
+  await pdf2png(tempSinglePdf, 0.25, tempSingleThumb)
+  // Removed due to upstream linux bug with ghostscript unable to convert PDFs to img
+  // await spawn(
+  //   'convert',
+  //   [
+  //     tempSinglePdf,
+  //     '-thumbnail',
+  //     `${THUMB_MAX_WIDTH}x${THUMB_MAX_HEIGHT}>`,
+  //     tempSingleThumb,
+  //   ],
+  //   { capture: ['stdout', 'stderr'] }
+  // )
   await logStatus(`${originalPdfBasename}/pages/pg-${pageNum}`, {
     thumbGeneration: 'success',
   })
@@ -150,10 +153,10 @@ async function processPdfPage(pageNum, object) {
         pdfUrl: get(results, '[0][0]', ''),
         thumbUrl: get(results, '[1][0]', ''),
       },
-      { merge: true },
+      { merge: true }
     )
   console.log(
-    `Finished saving data in Firestore for ${originalPdfBasename}(${pageNum})`,
+    `Finished saving data in Firestore for ${originalPdfBasename}(${pageNum})`
   )
   await logStatus(`${originalPdfBasename}/pages/pg-${pageNum}`, {
     processingFinished: 'success',
