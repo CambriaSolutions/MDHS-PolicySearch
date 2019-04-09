@@ -11,6 +11,10 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import styled from 'styled-components'
 
+// Database setup
+import firebase from 'firebase'
+const db = firebase.firestore()
+
 const OuterContainer = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -19,10 +23,17 @@ const OuterContainer = styled.div`
   max-width: 1200px;
 `
 
-const TextContainer = styled.div`
+const OuterTextContainer = styled.div`
   margin: auto 5px;
   color: rgba(0, 0, 0, 0.44);
   font-size: 13px;
+`
+
+const InnerTextContainer = styled.div`
+  color: rgba(0, 0, 0, 0.44);
+  margin-top: 10px;
+  font-size: 13px;
+  max-width: 300px;
 `
 const StyledButton = styled(Button)`
   && {
@@ -70,14 +81,39 @@ class SurveyDialog extends PureComponent {
   handleSubmit = () => {
     const { wasHelpful, feedbackList } = this.state
     const payLoad = { wasHelpful, feedbackList }
-    fetch(process.env.REACT_APP_ANALYTICS_URI, {
-      method: 'POST',
-      body: payLoad,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    this.handleClose()
+
+    const newCollection = {
+      true: 0,
+      false: 0,
+    }
+
+    db.collection('analytics')
+      .doc('feedback')
+      .get()
+      .then(snapshot => {
+        const { helpfulCollection } = snapshot.data()
+        if (helpfulCollection) {
+          const didHelp = helpfulCollection.true
+          const didntHelp = helpfulCollection.false
+
+          if (wasHelpful && didHelp > 0) {
+            return (newCollection.true += 1 + didHelp)
+          } else if (wasHelpful) {
+            return (newCollection.true += 1)
+          } else if (!wasHelpful && didntHelp > 0) {
+            return (newCollection.false += 1 + didntHelp)
+          } else if (!wasHelpful) {
+            return (newCollection.false += 1)
+          }
+        }
+      })
+      .then(() => {
+        console.log(newCollection)
+        db.collection('analytics')
+          .doc(`feedback`)
+          .set({ helpfulCollection: newCollection }, { merge: true })
+        this.handleClose()
+      })
   }
 
   render() {
@@ -109,6 +145,7 @@ class SurveyDialog extends PureComponent {
           control={
             <Checkbox
               key={`checkbox-${key}`}
+              color="primary"
               checked={feedbackList.includes(item)}
               onChange={this.handleChange(item)}
               value={item}
@@ -122,7 +159,7 @@ class SurveyDialog extends PureComponent {
     const surveyTitle = wasHelpful ? 'I found' : 'I did not find'
     return (
       <OuterContainer>
-        <TextContainer>Was Casey Helpful?</TextContainer>
+        <OuterTextContainer>Was Casey Helpful?</OuterTextContainer>
         <StyledButton
           variant="contained"
           size="small"
@@ -146,6 +183,10 @@ class SurveyDialog extends PureComponent {
               <FormLabel>Check all that apply</FormLabel>
               <FormGroup>{surveyOptions}</FormGroup>
             </FormControl>
+            <InnerTextContainer>
+              Your feedback is important to use and will help improve Casey.
+              Thank you!
+            </InnerTextContainer>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
