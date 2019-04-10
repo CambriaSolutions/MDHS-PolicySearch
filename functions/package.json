@@ -8,6 +8,7 @@
     "start": "npm run shell",
     "deploy-dev": "firebase deploy --only functions --project development",
     "deploy-prod": "firebase deploy --only functions --project production",
+    "deploy-feedback": "firebase deploy --only functions:summarizeFeedback --project production",
     "logs": "firebase functions:log"
   },
   "dependencies": {

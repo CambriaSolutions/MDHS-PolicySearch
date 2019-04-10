@@ -1,13 +1,8 @@
-const admin = require('firebase-admin');
-const functions = require('firebase-functions');
+const functions = require('firebase-functions')
+const admin = require('firebase-admin')
 
-admin.initializeApp(functions.config().firebase);
-
-const db = admin.firestore();
-
-const doc = db.collection('feedback');
-const observer = doc.onSnapshot(docSnapshot => {
-  console.log(`Received doc snapshot: ${docSnapshot}`);
-}, err => {
-  console.log(`Encountered error: ${err}`);
-});
+exports = module.exports = functions.firestore
+  .document('analytics/feedback')
+  .onWrite((snap, context) => {
+    return console.log(snap)
+  })
