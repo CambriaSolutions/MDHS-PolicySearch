@@ -4,7 +4,6 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
-import FormLabel from '@material-ui/core/FormLabel'
 import FormControl from '@material-ui/core/FormControl'
 import FormGroup from '@material-ui/core/FormGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
@@ -26,23 +25,23 @@ const OuterTextContainer = styled.div`
   font-size: 13px;
 `
 
-const InnerTextContainer = styled.div`
-  color: rgba(0, 0, 0, 0.44);
-  margin-top: 10px;
-  font-size: 13px;
-  max-width: 300px;
-`
-
 const TitleContainer = styled(DialogTitle)`
   && {
     padding-bottom: 10px;
   }
 `
 
-const SubText = styled.div`
+const SubTitle = styled.div`
   font-size: 13px;
   color: rgba(0, 0, 0, 0.44);
   padding-bottom: 2px;
+`
+
+const DialogTextContainer = styled.div`
+  color: rgba(0, 0, 0, 0.44);
+  margin-top: 10px;
+  font-size: 14px;
+  max-width: 300px;
 `
 
 const StyledButton = styled(Button)`
@@ -156,13 +155,13 @@ class SurveyDialog extends PureComponent {
           <TitleContainer>{`${surveyTitle} Casey helpful because:`}</TitleContainer>
           <DialogContent>
             <FormControl component="fieldset">
-              <SubText>(Check all that apply)</SubText>
+              <SubTitle>(Check all that apply)</SubTitle>
               <FormGroup>{surveyOptions}</FormGroup>
             </FormControl>
-            <InnerTextContainer>
-              Your feedback is important to use and will help improve Casey.
+            <DialogTextContainer>
+              Your feedback is important to us and will help improve Casey.
               Thank you!
-            </InnerTextContainer>
+            </DialogTextContainer>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
