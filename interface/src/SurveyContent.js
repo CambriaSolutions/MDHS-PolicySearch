@@ -48,108 +48,60 @@ const negativeFeedback = [
   'Was not easy to navigate',
 ]
 
-class SurveyContentHook extends PureComponent {
-  render() {
-    const { wasHelpful, open, feedbackList } = this.props
+function SurveyContent(props) {
+  const {
+    wasHelpful,
+    open,
+    feedbackList,
+    handleChange,
+    handleClose,
+    handleSubmit,
+  } = props
+  const surveyGroup = wasHelpful ? positiveFeedback : negativeFeedback
 
-    const surveyGroup = wasHelpful ? positiveFeedback : negativeFeedback
-
-    const surveyOptions = surveyGroup.map((item, key) => {
-      return (
-        <FormControlLabel
-          key={`control-${key}`}
-          control={
-            <Checkbox
-              key={`checkbox-${key}`}
-              color="primary"
-              checked={feedbackList.includes(item)}
-              onChange={this.props.handleChange(item)}
-              value={item}
-            />
-          }
-          label={item}
-        />
-      )
-    })
-
-    const surveyTitle = wasHelpful ? 'I found' : 'I did not find'
-
+  const surveyOptions = surveyGroup.map((item, key) => {
     return (
-      <Dialog open={open} onClose={this.props.handleClose}>
-        <TitleContainer>{`${surveyTitle} Casey helpful because:`}</TitleContainer>
-        <DialogContent>
-          <FormControl component="fieldset">
-            <SubTitle>(Check all that apply)</SubTitle>
-            <FormGroup>{surveyOptions}</FormGroup>
-          </FormControl>
-          <DialogTextContainer>
-            Your feedback is important to us and will help improve Casey. Thank
-            you!
-          </DialogTextContainer>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={this.props.handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={this.props.handleSubmit} color="primary" autoFocus>
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <FormControlLabel
+        key={`control-${key}`}
+        control={
+          <Checkbox
+            key={`checkbox-${key}`}
+            color="primary"
+            checked={feedbackList.includes(item)}
+            onChange={handleChange(item)}
+            value={item}
+          />
+        }
+        label={item}
+      />
     )
-  }
-}
+  })
 
-class SurveyContent extends PureComponent {
-  render() {
-    const { wasHelpful, open, feedbackList } = this.props
+  const surveyTitle = wasHelpful ? 'I found' : 'I did not find'
 
-    const surveyGroup = wasHelpful ? positiveFeedback : negativeFeedback
-
-    const surveyOptions = surveyGroup.map((item, key) => {
-      return (
-        <FormControlLabel
-          key={`control-${key}`}
-          control={
-            <Checkbox
-              key={`checkbox-${key}`}
-              color="primary"
-              checked={feedbackList.includes(item)}
-              onChange={this.props.handleChange(item)}
-              value={item}
-            />
-          }
-          label={item}
-        />
-      )
-    })
-
-    const surveyTitle = wasHelpful ? 'I found' : 'I did not find'
-
-    return (
-      <Dialog open={open} onClose={this.props.handleClose}>
-        <TitleContainer>{`${surveyTitle} Casey helpful because:`}</TitleContainer>
-        <DialogContent>
-          <FormControl component="fieldset">
-            <SubTitle>(Check all that apply)</SubTitle>
-            <FormGroup>{surveyOptions}</FormGroup>
-          </FormControl>
-          <DialogTextContainer>
-            Your feedback is important to us and will help improve Casey. Thank
-            you!
-          </DialogTextContainer>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={this.props.handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={this.props.handleSubmit} color="primary" autoFocus>
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
-    )
-  }
+  return (
+    <Dialog open={open} onClose={handleClose}>
+      <TitleContainer>{`${surveyTitle} Casey helpful because:`}</TitleContainer>
+      <DialogContent>
+        <FormControl component="fieldset">
+          <SubTitle>(Check all that apply)</SubTitle>
+          <FormGroup>{surveyOptions}</FormGroup>
+        </FormControl>
+        <DialogTextContainer>
+          Your feedback is important to us and will help improve Casey. Thank
+          you!
+        </DialogTextContainer>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="primary">
+          Cancel
+        </Button>
+        <Button onClick={handleSubmit} color="primary" autoFocus>
+          Submit
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
 }
 
 export default SurveyContent
