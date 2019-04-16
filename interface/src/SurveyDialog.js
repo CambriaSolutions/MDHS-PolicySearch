@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { useState } from 'react'
 import Button from '@material-ui/core/Button'
 import SurveyContent from './SurveyContent'
 import styled from 'styled-components'
@@ -27,74 +27,60 @@ const StyledButton = styled(Button)`
   }
 `
 
-class SurveyDialog extends PureComponent {
-  state = {
-    open: false,
-    wasHelpful: null,
-    feedbackList: [],
+function SurveyDialog() {
+  const [wasHelpful, setWasHelpful] = useState(null)
+  const [open, setOpen] = useState(false)
+  const [feedbackList, upDateFeedbackList] = useState([])
+
+  function handleClickYes() {
+    setWasHelpful(true)
+    setOpen(true)
   }
 
-  handleClickYes = e => {
-    this.setState({ wasHelpful: true })
-    this.setState({ open: true })
+  function handleClickNo() {
+    setWasHelpful(false)
+    setOpen(true)
   }
 
-  handleClickNo = e => {
-    this.setState({ wasHelpful: false })
-    this.setState({ open: true })
+  function handleClose() {
+    setOpen(false)
+    upDateFeedbackList([])
   }
 
-  handleClose = () => {
-    this.setState({ open: false })
-    this.setState({ feedbackList: [] })
-  }
-
-  handleChange = name => () => {
-    const { feedbackList } = this.state
+  const handleChange = name => () => {
     let newFeedbackList
     if (!feedbackList.includes(name)) {
       newFeedbackList = [...feedbackList, name]
     } else {
       newFeedbackList = feedbackList.filter(item => item !== name)
     }
-    this.setState({ feedbackList: newFeedbackList })
+    upDateFeedbackList(newFeedbackList)
   }
 
-  handleSubmit = () => {
-    const { feedbackList, wasHelpful } = this.state
+  function handleSubmit() {
     storeFeedback(wasHelpful, feedbackList)
-    this.handleClose()
+    handleClose()
   }
 
-  render() {
-    return (
-      <OuterContainer>
-        <OuterTextContainer>Was Casey Helpful?</OuterTextContainer>
-        <StyledButton
-          variant="contained"
-          size="small"
-          onClick={this.handleClickYes}
-        >
-          Yes
-        </StyledButton>
-        <StyledButton
-          variant="contained"
-          size="small"
-          onClick={this.handleClickNo}
-        >
-          No
-        </StyledButton>
-        <SurveyContent
-          open={this.state.open}
-          feedbackList={this.state.feedbackList}
-          handleClose={this.handleClose}
-          handleChange={this.handleChange}
-          handleSubmit={this.handleSubmit}
-          wasHelpful={this.state.wasHelpful}
-        />
-      </OuterContainer>
-    )
-  }
+  return (
+    <OuterContainer>
+      <OuterTextContainer>Was Casey Helpful?</OuterTextContainer>
+      <StyledButton variant="contained" size="small" onClick={handleClickYes}>
+        Yes
+      </StyledButton>
+      <StyledButton variant="contained" size="small" onClick={handleClickNo}>
+        No
+      </StyledButton>
+      <SurveyContent
+        open={open}
+        feedbackList={feedbackList}
+        handleClose={handleClose}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+        wasHelpful={wasHelpful}
+      />
+    </OuterContainer>
+  )
 }
 
 export default SurveyDialog
