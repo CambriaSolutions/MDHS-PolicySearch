@@ -22,10 +22,18 @@ const SubTitle = styled.div`
   padding-bottom: 2px;
 `
 
+const DialogContentContainer = styled(DialogContent)`
+  && {
+    padding-bottom: 10px;
+  }
+`
+
 const DialogTextContainer = styled.div`
-  color: rgba(0, 0, 0, 0.44);
-  margin-top: 10px;
-  font-size: 14px;
+  margin: 15px auto 0px;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 20px;
+  text-align: center;
   max-width: 300px;
 `
 
@@ -81,7 +89,7 @@ function SurveyContent(props) {
   return (
     <Dialog open={open} onClose={handleClose}>
       <TitleContainer>{`${surveyTitle} Casey helpful because:`}</TitleContainer>
-      <DialogContent>
+      <DialogContentContainer>
         <FormControl component="fieldset">
           <SubTitle>(Check all that apply)</SubTitle>
           <FormGroup>{surveyOptions}</FormGroup>
@@ -90,7 +98,7 @@ function SurveyContent(props) {
           Your feedback is important to us and will help improve Casey. Thank
           you!
         </DialogTextContainer>
-      </DialogContent>
+      </DialogContentContainer>
       <DialogActions>
         <Button onClick={handleClose} color="primary">
           Cancel
