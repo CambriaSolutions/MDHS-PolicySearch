@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
+import { connect } from 'react-redux'
 import Button from '@material-ui/core/Button'
 import SurveyContent from './SurveyContent'
 import styled from 'styled-components'
 import storeFeedback from './actions/databaseActions.js'
+
+import { toggleSnackbarOpen } from './actions/navigationActions'
 
 const OuterContainer = styled.div`
   display: flex;
@@ -27,7 +30,8 @@ const StyledButton = styled(Button)`
   }
 `
 
-function SurveyDialog() {
+function SurveyDialog(props) {
+  const { toggleSnackbarOpen } = props
   const [wasHelpful, setWasHelpful] = useState(null)
   const [open, setOpen] = useState(false)
   const [feedbackList, upDateFeedbackList] = useState([])
@@ -59,6 +63,7 @@ function SurveyDialog() {
 
   function handleSubmit() {
     storeFeedback(wasHelpful, feedbackList)
+    toggleSnackbarOpen('Thanks for the feedback!')
     handleClose()
   }
 
@@ -83,4 +88,15 @@ function SurveyDialog() {
   )
 }
 
-export default SurveyDialog
+const mapStateToProps = state => {
+  return {}
+}
+
+const mapDispatchToProps = {
+  toggleSnackbarOpen,
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SurveyDialog)

@@ -21,8 +21,8 @@ async function logRequest(wasHelpful, feedbackList) {
 
     let newPostiveFeedbackList = {}
     let newNegativeFeedbackList = {}
-    let newHelpfulResponses = 1
-    let newUnHelpfulResponses = 1
+    let newHelpfulResponses = 0
+    let newUnHelpfulResponses = 0
 
     let newTotalNumResponses = 1
     if (doc.exists && typeof doc.data().totalNumResponses !== 'undefined') {
@@ -46,7 +46,7 @@ async function logRequest(wasHelpful, feedbackList) {
     }
 
     if (wasHelpful) {
-      newHelpfulResponses = doc.data().helpfulResponses + 1
+      newHelpfulResponses += 1
       if (feedbackList && feedbackList !== '') {
         feedbackList.forEach(feedback => {
           if (newPostiveFeedbackList[feedback]) {
@@ -58,7 +58,7 @@ async function logRequest(wasHelpful, feedbackList) {
         })
       }
     } else {
-      newUnHelpfulResponses = doc.data().unhelpfulResponses + 1
+      newUnHelpfulResponses += 1
       if (feedbackList && feedbackList !== '') {
         feedbackList.forEach(feedback => {
           if (newNegativeFeedbackList[feedback]) {
