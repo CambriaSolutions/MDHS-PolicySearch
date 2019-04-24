@@ -4,6 +4,7 @@ import Paper from '@material-ui/core/Paper'
 import PdfPage from './PdfPage'
 import PdfNavigation from './PdfNavigation'
 import Sidebar from './Sidebar'
+import SurveyDialog from './SurveyDialog'
 import styled from 'styled-components'
 import get from 'lodash/get'
 import grey from '@material-ui/core/colors/grey'
@@ -14,7 +15,7 @@ import { showLoadingSpinner } from './actions/navigationActions'
 const Container = styled.div`
   display: grid;
   grid-template-columns: ${p => (p.active ? '250px 1fr' : '85px 1fr')};
-  grid-template-rows: 92px 1fr;
+  grid-template-rows: 100px 1fr;
   grid-template-areas:
     'sidebar appbar'
     'sidebar main';
@@ -32,15 +33,15 @@ const Main = styled.div`
 const AppBar = styled.div`
   grid-area: appbar;
   background: ${grey[200]};
-  padding: 24px;
+  padding: 24px 24px 0px 24px;
   display: flex;
   flex-flow: column nowrap;
 `
 
 const PdfContainer = styled(Paper)`
   width: calc(100% - 48px);
-  height: calc(100vh - 106px - 36px);
-  margin: 24px auto;
+  height: calc(100vh - 106px - 36px - 50px);
+  margin: 16px auto;
   max-width: 1200px;
   display: flex;
   flex-flow: column nowrap;
@@ -59,15 +60,18 @@ export class App extends PureComponent {
       searchText: '',
     }
   }
+
   handleSearchInput = e => {
     this.setState({ searchText: e.target.value })
   }
+
   catchReturn = e => {
     if (e.key === 'Enter') {
       e.preventDefault()
       this.props.queryCloudSearch(this.state.searchText)
     }
   }
+
   render() {
     const {
       currentPage,
@@ -88,6 +92,7 @@ export class App extends PureComponent {
           />
         </AppBar>
         <Main>
+          <SurveyDialog />
           <PdfContainer elevation={1} loading={isLoading ? 1 : 0}>
             <PdfNavigation />
             <PdfPage

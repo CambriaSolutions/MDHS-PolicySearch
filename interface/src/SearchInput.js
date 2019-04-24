@@ -12,7 +12,7 @@ const SearchBox = styled(FilledInput)`
     height: 44px;
     min-height: 44px;
     max-width: 1200px;
-    margin: auto auto;
+    margin: auto;
     > input {
       padding: 12px 12px 12px 0;
     }
