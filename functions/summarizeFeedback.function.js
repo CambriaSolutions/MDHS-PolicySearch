@@ -23,31 +23,31 @@ async function logRequest(wasHelpful, feedbackList) {
     let newNegativeFeedbackList = {}
     let newHelpfulResponses = 0
     let newUnHelpfulResponses = 0
-
     let newTotalNumResponses = 1
-    if (doc.exists && typeof doc.data().totalNumResponses !== 'undefined') {
+
+    if (doc.exists && doc.data().totalNumResponses) {
       newTotalNumResponses = doc.data().totalNumResponses + 1
     }
 
-    if (doc.exists && typeof doc.data().positiveFeedbackList !== 'undefined') {
+    if (doc.exists && doc.data().positiveFeedbackList) {
       newPostiveFeedbackList = doc.data().positiveFeedbackList
     }
 
-    if (doc.exists && typeof doc.data().negativeFeedbackList !== 'undefined') {
+    if (doc.exists && doc.data().negativeFeedbackList) {
       newNegativeFeedbackList = doc.data().negativeFeedbackList
     }
 
-    if (doc.exists && typeof doc.data().helpfulResponses !== 'undefined') {
+    if (doc.exists && doc.data().helpfulResponses) {
       newHelpfulResponses = doc.data().helpfulResponses
     }
 
-    if (doc.exists && typeof doc.data().unhelpfulResponses !== 'undefined') {
+    if (doc.exists && doc.data().unhelpfulResponses) {
       newUnHelpfulResponses = doc.data().unhelpfulResponses
     }
 
     if (wasHelpful) {
       newHelpfulResponses += 1
-      if (feedbackList && feedbackList !== '') {
+      if (feedbackList && feedbackList.length > 0) {
         feedbackList.forEach(feedback => {
           if (newPostiveFeedbackList[feedback]) {
             newPostiveFeedbackList[feedback] =
@@ -57,9 +57,11 @@ async function logRequest(wasHelpful, feedbackList) {
           }
         })
       }
-    } else {
+    }
+
+    if (!wasHelpful) {
       newUnHelpfulResponses += 1
-      if (feedbackList && feedbackList !== '') {
+      if (feedbackList && feedbackList.length > 0) {
         feedbackList.forEach(feedback => {
           if (newNegativeFeedbackList[feedback]) {
             newNegativeFeedbackList[feedback] =
