@@ -34,7 +34,7 @@ function SurveyDialog(props) {
   const { toggleSnackbarOpen } = props
   const [wasHelpful, setWasHelpful] = useState(null)
   const [open, setOpen] = useState(false)
-  const [feedbackList, upDateFeedbackList] = useState([])
+  const [feedbackList, setFeedbackList] = useState([])
 
   function handleClickYes() {
     setWasHelpful(true)
@@ -48,7 +48,7 @@ function SurveyDialog(props) {
 
   function handleClose() {
     setOpen(false)
-    upDateFeedbackList([])
+    setFeedbackList([])
   }
 
   const handleChange = name => () => {
@@ -58,7 +58,7 @@ function SurveyDialog(props) {
     } else {
       newFeedbackList = feedbackList.filter(item => item !== name)
     }
-    upDateFeedbackList(newFeedbackList)
+    setFeedbackList(newFeedbackList)
   }
 
   function handleSubmit() {
