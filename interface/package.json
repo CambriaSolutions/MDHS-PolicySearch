@@ -33,7 +33,9 @@
     "deploy-dev-management": "firebase deploy --only hosting:management --project development",
     "deploy-prod-search": "firebase deploy --only hosting:search --project production",
     "deploy-prod-management": "firebase deploy --only hosting:management --project production",
-    "deploy-prod-all": "firebase deploy --only hosting --project production"
+    "deploy-prod-all": "firebase deploy --only hosting --project production",
+    "deploy-rules-dev": "firebase deploy --only firestore:rules --project development",
+    "deploy-rules-prod": "firebase deploy --only firestore:rules --project production"
   },
   "devDependencies": {
     "cpx": "^1.5.0",
