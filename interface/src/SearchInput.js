@@ -1,7 +1,6 @@
 import React from 'react'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import SearchIcon from '@material-ui/icons/Search'
-import { withTheme } from '@material-ui/core/styles'
 import FilledInput from '@material-ui/core/FilledInput'
 import styled from 'styled-components'
 
@@ -18,7 +17,7 @@ const SearchBox = styled(FilledInput)`
     }
   }
 `
-function MyComponent(props) {
+function SearchInput(props) {
   return (
     <SearchBox
       fullWidth
@@ -37,5 +36,4 @@ function MyComponent(props) {
     />
   )
 }
-
-export default withTheme()(MyComponent)
+export default SearchInput
