@@ -192,7 +192,7 @@ export function queryCloudSearch(userSays) {
     }, 30000)
 
     try {
-      let url = new URL(process.env.REACT_APP_CLOUD_SEARCH_ENDPOINT)
+      let url = new URL(process.env.REACT_APP_SEARCH_ENDPOINT)
       const params = { userSays: userSays }
       Object.keys(params).forEach(key =>
         url.searchParams.append(key, params[key])

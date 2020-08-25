@@ -85,8 +85,6 @@ FIREBASE_TOKEN is generated using `firebase login:ci` locally
 ```
 CLOUD_SEARCH_ENDPOINT=xxxxxxxxxxxxxxx.cloudsearch.amazonaws.com
 
-APP_ENGINE_ENDPOINT=documentsearch-b1881
-
 AWS_ACCESS_KEY=xxxxxxxxxxxxxxx
 
 AWS_SECRET_KEY=xxxxxxxxxxxxxxx

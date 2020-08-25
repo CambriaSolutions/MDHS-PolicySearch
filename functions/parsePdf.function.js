@@ -1,6 +1,7 @@
 const functions = require('firebase-functions')
 const mkdirp = require('mkdirp-promise')
 const admin = require('firebase-admin')
+const projectId = admin.instanceId().app.options.projectId
 const storage = admin.storage()
 const path = require('path')
 const os = require('os')
@@ -188,7 +189,7 @@ exports = module.exports = functions
 
     var options = {
       method: 'POST',
-      uri: `https://${process.env.APP_ENGINE_ENDPOINT}.appspot.com`,
+      uri: `https://${projectId}.appspot.com`,
       body: {
         storageObject: object,
       },
