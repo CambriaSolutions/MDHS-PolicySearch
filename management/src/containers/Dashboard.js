@@ -26,7 +26,6 @@ function Dashboard(props) {
     height: 900px;
     max-width: 100%;
     max-height: 100%;
-    overflow: auto;
     .material-icons {
       font-size: 65px;
       color: ${mainColor};
