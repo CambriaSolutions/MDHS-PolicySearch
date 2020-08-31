@@ -1,6 +1,7 @@
 import * as actionTypes from '../actions/actionTypes'
 
 const initialState = {
+  mainColor: "#3a8bc9",
   loading: false,
   showSettings: false,
   snackbarOpen: false,

@@ -42,7 +42,7 @@ class Header extends Component {
 
 const mapStateToProps = state => {
   return {
-    mainColor: "#ffebee",
+    mainColor: state.config.mainColor,
   }
 }
 

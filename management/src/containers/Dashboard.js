@@ -1,8 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import * as actions from '../store/actions/index'
 import styled from 'styled-components'
 import Settings from './Settings'
+import DocumentList from '../components/DocumentList'
 
 // Material UI
 import Drawer from '@material-ui/core/Drawer'
@@ -15,54 +16,69 @@ const rootStyles = {
   margin: '2.5% 3%',
 }
 
-class Dashboard extends Component {
-  render() {
-    const CenterDiv = styled.div`
-      text-align: center;
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      margin: auto;
-      width: 300px;
-      height: 300px;
-      max-width: 100%;
-      max-height: 100%;
-      overflow: auto;
-      .material-icons {
-        font-size: 65px;
-        color: ${this.props.mainColor};
-      }
-    `
+function Dashboard(props) {
+  const { isLoggedIn, isLoading, isAuthenticating, mainColor, showSettings, onSettingsToggle } = props
 
-    return (
-      <div style={rootStyles}>
-        <Drawer
-          anchor='right'
-          open={this.props.showSettings}
-          onClose={this.props.onSettingsToggle}>
-          <Settings />
-        </Drawer>
+  const CenterDiv = styled.div`
+    text-align: center;
+    margin: auto;
+    width: 1200px;
+    height: 900px;
+    max-width: 100%;
+    max-height: 100%;
+    overflow: auto;
+    .material-icons {
+      font-size: 65px;
+      color: ${mainColor};
+    }
+  `
+
+  let centerDiv
+  if (!isLoggedIn || isLoading || isAuthenticating) {
+    centerDiv = (
+      <CenterDiv>
+        <h2>Loading...</h2>
+        <CircularProgress />
+      </CenterDiv>
+    )
+  } else {
+    centerDiv = (
+      <div>
         <CenterDiv>
-          <h2>Loading...</h2>
-          <CircularProgress />
+          <DocumentList />
         </CenterDiv>
       </div>
     )
   }
-}
 
-const mapStateToProps = state => {
-  return {
-    mainColor: "#ffebee",
-    showSettings: state.config.showSettings,
-  }
+  let dashboard = (
+    <div style={rootStyles}>
+      <Drawer
+        anchor='right'
+        open={showSettings}
+        onClose={onSettingsToggle}>
+        <Settings />
+      </Drawer>
+      {centerDiv}
+    </div>
+  )
+
+  return dashboard
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     onSettingsToggle: () => dispatch(actions.toggleSettings(false)),
+  }
+}
+
+const mapStateToProps = state => {
+  return {
+    mainColor: state.config.mainColor,
+    showSettings: state.config.showSettings,
+    isLoggedIn: state.auth.isLoggedIn,
+    isLoading: state.auth.isLoading,
+    isAuthenticating: state.auth.isAuthenticating,
   }
 }
 
