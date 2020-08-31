@@ -64,3 +64,5 @@ typings/
 keys.json
 
 **keys/
+
+.firebase/

@@ -21,7 +21,7 @@
           "mdhs-policysearch-dev"
         ],
         "management": [
-          "mdhs-policysearch-management-dev"
+          "mdhs-policysearch-admin-dev"
         ]
       }
     }
