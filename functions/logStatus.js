@@ -5,7 +5,7 @@ function logStatus(docName, update) {
   return db
     .collection('documents')
     .doc(docName)
-    .set(update, { merge: true })
+    .set(JSON.parse(JSON.stringify(update)), { merge: true })
 }
 
 module.exports = logStatus

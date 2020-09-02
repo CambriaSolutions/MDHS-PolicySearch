@@ -40,7 +40,7 @@ function generateDocumentBatch(rawText, fileName) {
             content: content,
             filename: fileName, // this field must be lowercase per AWS
             pointer: pointer,
-            tags: [],
+            //tags: [],
           },
         }
       })
