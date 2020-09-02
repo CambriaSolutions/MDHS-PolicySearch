@@ -52,7 +52,7 @@ export const uploadDocument = (document) => {
                 dispatch({
                     type: actionTypes.UPLOAD_DOCUMENT_SUCCESS,
                 })
-                dispatch(listDocuments)
+                dispatch(listDocuments())
             }).catch(err => {
                 console.error(err)
                 dispatch({
@@ -73,7 +73,7 @@ export const deleteDocument = (documentName) => {
                 dispatch({
                     type: actionTypes.DELETE_DOCUMENT_SUCCESS,
                 })
-                dispatch(listDocuments)
+                dispatch(listDocuments())
             }).catch(err => {
                 console.error(err)
                 dispatch({

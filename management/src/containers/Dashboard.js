@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect }  from 'react'
 import { connect } from 'react-redux'
 import * as actions from '../store/actions/index'
 import styled from 'styled-components'
@@ -17,7 +17,13 @@ const rootStyles = {
 }
 
 function Dashboard(props) {
-  const { isLoggedIn, isLoading, isAuthenticating, mainColor, showSettings, onSettingsToggle } = props
+  const { isLoggedIn, isLoading, isAuthenticating, mainColor, showSettings, onSettingsToggle, listDocuments } = props
+
+  useEffect(() => {
+    if (isLoggedIn && !isLoading && !isAuthenticating) {
+      listDocuments()
+    }
+  }, [isLoggedIn, isLoading, isAuthenticating])
 
   const CenterDiv = styled.div`
     text-align: center;
@@ -67,6 +73,7 @@ function Dashboard(props) {
 
 const mapDispatchToProps = dispatch => {
   return {
+    listDocuments: () => dispatch(actions.listDocuments()),
     onSettingsToggle: () => dispatch(actions.toggleSettings(false)),
   }
 }

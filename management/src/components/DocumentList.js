@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import * as actions from '../store/actions/index'
 import { connect } from 'react-redux'
 import { withStyles, makeStyles } from '@material-ui/core/styles';
@@ -38,10 +38,8 @@ const useStyles = makeStyles({
 });
 
 function DocumentList(props) {
-    const { listDocuments, documents, deleteDocument, isDeleting } = props
+    const { documents, deleteDocument, isDeleting } = props
     const classes = useStyles();
-
-    useEffect(() => { listDocuments() }, [documents]);
 
     return (
         <div>
@@ -78,7 +76,6 @@ function DocumentList(props) {
 
 const mapDispatchToProps = dispatch => {
     return {
-        listDocuments: () => dispatch(actions.listDocuments()),
         deleteDocument: (name) => dispatch(actions.deleteDocument(name)),
     }
 }
