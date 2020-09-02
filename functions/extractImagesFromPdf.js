@@ -6,7 +6,6 @@ const pdfjsLib = require('pdfjs-dist/es5/build/pdf.js')
 const admin = require('firebase-admin')
 const storage = admin.storage()
 const pLimit = require('p-limit')
-//const processPdfPage = require('./processPdfPage')
 const logStatus = require('./logStatus')
 const gs = require('gs')
 const generateSignedUrl = require('./generateSignedUrl')
@@ -39,24 +38,13 @@ const extractImagesFromPdf = async (storageObject) => {
 
     await logStatus(originalPdfBasename, { pageCount: numPages })
     console.log(`Found ${numPages} pages for ${originalPdfBasename}`)
-    // const promises = []
-    // const limit = pLimit(100)
-    // for (let i = 1; i <= numPages; i++) {
-    //   promises.push(limit(() => processPdfPage(i, storageObject)))
-    // }
-
-    // await Promise.all(promises)
 
     const pdfMetadata = {
         contentType: storageObject.contentType,
-        // To enable Client-side caching you can set the Cache-Control headers here. Uncomment below.
-        // 'Cache-Control': 'public,max-age=3600',
     }
 
     const imageMetadata = {
         contentType: 'image/png',
-        // To enable Client-side caching you can set the Cache-Control headers here. Uncomment below.
-        // 'Cache-Control': 'public,max-age=3600',
     }
 
     console.log('Starting GS...')
