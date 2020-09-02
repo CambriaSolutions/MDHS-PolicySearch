@@ -21,7 +21,7 @@ function Dashboard(props) {
 
   useEffect(() => {
     if (isLoggedIn && !isLoading && !isAuthenticating) {
-      listDocuments()
+      listDocuments(true)
     }
   }, [isLoggedIn, isLoading, isAuthenticating])
 
@@ -73,7 +73,7 @@ function Dashboard(props) {
 
 const mapDispatchToProps = dispatch => {
   return {
-    listDocuments: () => dispatch(actions.listDocuments()),
+    listDocuments: (registerListeners) => dispatch(actions.listDocuments(registerListeners)),
     onSettingsToggle: () => dispatch(actions.toggleSettings(false)),
   }
 }

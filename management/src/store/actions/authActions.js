@@ -2,7 +2,8 @@ import * as actionTypes from '../actions/actionTypes'
 import { authRef } from '../../Firebase'
 import { toggleSettings } from './configActions'
 import { showSnackbar } from './configActions'
-//import db from '../../Firebase'
+import { clearListeners } from './documentActions'
+
 
 export const fetchUser = () => dispatch => {
   authRef.onAuthStateChanged(user => {
@@ -70,6 +71,7 @@ export const signOut = () => dispatch => {
     .signOut()
     .then(() => {
       dispatch(toggleSettings(false))
+      dispatch(clearListeners())
       dispatch({
         type: actionTypes.SIGNOUT_USER,
       })

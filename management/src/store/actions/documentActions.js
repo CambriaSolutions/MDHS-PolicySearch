@@ -1,17 +1,61 @@
 import * as actionTypes from '../actions/actionTypes'
-import { storage } from '../../Firebase'
+import { db, storage } from '../../Firebase'
 import { format } from 'date-fns'
+
+const getItemData = async (item) => {
+    const metadata = await item.getMetadata()
+    const downloadUrl = await item.getDownloadURL()
+
+    return { metadata: metadata, downloadUrl: downloadUrl }
+}
 
 const getDocumentInformation = async (snapshot) => {
     const promises = []
-    snapshot.items.forEach(item => {
-        promises.push(item.getMetadata())
-    })
-
+    snapshot.items.forEach(item => { promises.push(getItemData(item)) })
     return Promise.all(promises)
 }
 
-export const listDocuments = () => {
+const updateProcessingStatus = () => {
+    return dispatch => {
+        db.collection('documents').get().then(snapshot => {
+            snapshot.forEach(document => {
+                if (document.exists) {
+                    dispatch({
+                        type: actionTypes.PROCESSING_STATUS_UPDATE,
+                        payload: { name: document.id + '.pdf', processingStatus: document.data().processingStatus }
+                    })
+                }
+            })
+        })
+    }    
+}
+
+let unsubscribe
+export const registerListeners = () => {
+    return dispatch => {
+        unsubscribe = db.collection('documents').onSnapshot(snapshot => {
+            snapshot.forEach(document => {
+                if (document.exists) {
+                    dispatch({
+                        type: actionTypes.PROCESSING_STATUS_UPDATE,
+                        payload: { name: document.id + '.pdf', processingStatus: document.data().processingStatus }
+                    })
+                }
+            })
+        })
+    }
+}
+
+export const clearListeners = () => {
+    return dispatch => {
+        if (unsubscribe) {
+            unsubscribe()
+            unsubscribe = undefined
+        }
+    }
+}
+
+export const listDocuments = (doRegistration) => {
     return dispatch => {
         dispatch({
             type: actionTypes.LISTING_DOCUMENTS
@@ -21,15 +65,21 @@ export const listDocuments = () => {
             .then(snapshot => {
                 getDocumentInformation(snapshot).then(items => {
                     const itemMap = items.map(item => {
-                        const createdDate = new Date(item.timeCreated)
+                        const createdDate = new Date(item.metadata.timeCreated)
                         const timeCreated = format(createdDate, 'MM-dd-yyyy')
-                        return { name: item.name, timeCreated: timeCreated }
+                        return { name: item.metadata.name, timeCreated: timeCreated, downloadUrl: item.downloadUrl }
                     })
 
                     dispatch({
                         type: actionTypes.LISTING_DOCUMENTS_SUCCESS,
                         payload: itemMap
                     })
+
+                    if (doRegistration) {
+                        dispatch(registerListeners())
+                    } else {
+                        dispatch(updateProcessingStatus())
+                    }
                 })                
             })
             .catch(err => {
@@ -52,7 +102,7 @@ export const uploadDocument = (document) => {
                 dispatch({
                     type: actionTypes.UPLOAD_DOCUMENT_SUCCESS,
                 })
-                dispatch(listDocuments())
+                dispatch(listDocuments(false))
             }).catch(err => {
                 console.error(err)
                 dispatch({
@@ -73,7 +123,7 @@ export const deleteDocument = (documentName) => {
                 dispatch({
                     type: actionTypes.DELETE_DOCUMENT_SUCCESS,
                 })
-                dispatch(listDocuments())
+                dispatch(listDocuments(false))
             }).catch(err => {
                 console.error(err)
                 dispatch({

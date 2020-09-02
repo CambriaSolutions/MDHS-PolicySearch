@@ -14,20 +14,24 @@ const cloudSearchUpload = require('./cloudSearchUpload')
 const logStatus = require('./logStatus')
 const extractImagesFromPdf = require('./extractImagesFromPdf')
 
-exports = module.exports = functions
-  .runWith({ memory: '2GB', timeoutSeconds: 540 })
-  .storage.object()
-  .onFinalize(async object => {
-    const contentType = object.contentType
-    const PDF_EXTENSION = '.pdf'
-    const originalPdfPath = object.name
-    const originalUploadDir = path.dirname(originalPdfPath)
-    const extension = path.extname(originalPdfPath)
-    
-    // If the uploaded file does not have the PDF content type, ignore it
-    if (contentType.includes('pdf') && extension === PDF_EXTENSION && !originalUploadDir.startsWith('output')) {  
+const PDF_EXTENSION = '.pdf'
+
+const processDocument = async (object) => {
+
+  const contentType = object.contentType
+  const originalPdfPath = object.name
+  const originalUploadDir = path.dirname(originalPdfPath)
+  const originalPdfBasename = path.basename(originalPdfPath, PDF_EXTENSION)
+  const extension = path.extname(originalPdfPath)
+
+  // If the uploaded file does not have the PDF content type, ignore it
+  if (contentType.includes('pdf') && extension === PDF_EXTENSION && !originalUploadDir.startsWith('output')) {
+    try {
+      await logStatus(originalPdfBasename, {
+        processingStatus: 'processing',
+      })
+
       const newPdfPath = originalPdfPath.replace(/\s+/g, '_') // Replace whitespace to avoid errors
-      const originalPdfBasename = path.basename(originalPdfPath, PDF_EXTENSION)
       const newPdfBasename = path.basename(newPdfPath, PDF_EXTENSION)
 
       console.log(`Starting processing for file ${originalPdfBasename}`)
@@ -43,6 +47,8 @@ exports = module.exports = functions
       // Download the PDF to temp directory
       await bucket.file(originalPdfPath).download({ destination: tempLocalFile })
       await logStatus(newPdfBasename, { fileDownload: 'success' })
+
+      await logStatus(originalPdfBasename, { processingStatus: 'indexing' })
 
       // Check if rename is needed
       if (originalPdfPath !== newPdfPath) {
@@ -175,18 +181,30 @@ exports = module.exports = functions
         })
         console.log(`Sending ${originalPdfBasename} for processing`)
 
-        // TODO bring this into firebase
-        try {
-          await extractImagesFromPdf(object)
-          await logStatus(originalPdfBasename, { sendForProcessing: 'success' })
-        } catch (err) {
-          console.error(err)
-          await logStatus(originalPdfBasename, {
-            sendForProcessing: 'fail',
-            processingFinished: 'fail',
-            error: err,
-          })
-        }
+        await logStatus(originalPdfBasename, { processingStatus: 'extracting' })
+        await extractImagesFromPdf(object)
+        await logStatus(originalPdfBasename, { sendForProcessing: 'success', processingStatus: 'complete' })
       }
+    } catch (err) {
+      await logStatus(originalPdfBasename, {
+        processingStatus: 'failure',
+        sendForProcessing: 'fail',
+        processingFinished: 'fail',
+        error: err,
+      })
+
+      throw err
+    }
+  }
+}
+
+exports = module.exports = functions
+  .runWith({ memory: '2GB', timeoutSeconds: 540 })
+  .storage.object()
+  .onFinalize(async object => {
+    try {
+      await processDocument(object)
+    } catch (err) {
+      console.log(`Error in processing: ${e.message}`, e.stack)
     }
   })

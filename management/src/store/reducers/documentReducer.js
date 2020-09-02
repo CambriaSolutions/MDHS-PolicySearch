@@ -55,6 +55,18 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 isDeleting: false,
             }
+        case actionTypes.PROCESSING_STATUS_UPDATE:
+            const documents = state.documents.map(document => {
+                if (document.name === action.payload.name) {
+                    document.processingStatus = action.payload.processingStatus
+                }
+
+                return document
+            })
+            return {
+                ...state,
+                documents: documents
+            }
         default:
             return state
     }
