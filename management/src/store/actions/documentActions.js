@@ -91,6 +91,15 @@ export const listDocuments = (doRegistration) => {
     }
 }
 
+export const filterDocuments = (filterPhrase) => {
+    return dispatch => {
+        dispatch({
+            type: actionTypes.FILTER_DOCUMENTS,
+            payload: filterPhrase
+        })
+    }
+}
+
 export const uploadDocument = (document) => {
     return dispatch => {
         dispatch({

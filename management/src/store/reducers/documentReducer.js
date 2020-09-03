@@ -5,6 +5,15 @@ const initialState = {
     isListing: false,
     isUploading: false,
     isDeleting: false,
+    filterPhrase: ''
+}
+
+const filterDocuments = (documents, filterPhrase) => {
+        const filteredDocuments = documents.map(document => {
+            document.isVisible = document.name.includes(filterPhrase)                
+            return document
+        })
+        return filteredDocuments
 }
 
 const reducer = (state = initialState, action) => {
@@ -18,7 +27,7 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 isListing: false,
-                documents: action.payload
+                documents: filterDocuments(action.payload, state.filterPhrase)
             }
         case actionTypes.LISTING_DOCUMENTS_FAILURE:
             return {
@@ -66,6 +75,12 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 documents: documents
+            }
+        case actionTypes.FILTER_DOCUMENTS:
+            return {
+                ...state,
+                filterPhrase: action.payload.filterPhrase,
+                documents: filterDocuments(state.documents, action.payload)
             }
         default:
             return state
