@@ -66,7 +66,7 @@ export const listDocuments = (doRegistration) => {
                 getDocumentInformation(snapshot).then(items => {
                     const itemMap = items.map(item => {
                         const createdDate = new Date(item.metadata.timeCreated)
-                        const timeCreated = format(createdDate, 'MM-dd-yyyy')
+                        const timeCreated = format(createdDate, 'MMMM d, yyyy')
                         return { name: item.metadata.name, timeCreated: timeCreated, downloadUrl: item.downloadUrl }
                     })
 
@@ -108,10 +108,12 @@ export const uploadDocument = (document) => {
 
         storage.ref().child(document.name).put(document)
             .then(() => {
-                dispatch({
-                    type: actionTypes.UPLOAD_DOCUMENT_SUCCESS,
-                })
-                dispatch(listDocuments(false))
+                setTimeout(() => {
+                    dispatch({
+                        type: actionTypes.UPLOAD_DOCUMENT_SUCCESS,
+                    })
+                    dispatch(listDocuments(false))
+                }, 2000)                
             }).catch(err => {
                 console.error(err)
                 dispatch({
@@ -129,10 +131,12 @@ export const deleteDocument = (documentName) => {
 
         storage.ref().child(documentName).delete()
             .then(() => {
-                dispatch({
-                    type: actionTypes.DELETE_DOCUMENT_SUCCESS,
-                })
-                dispatch(listDocuments(false))
+                setTimeout(() => {
+                    dispatch({
+                        type: actionTypes.DELETE_DOCUMENT_SUCCESS,
+                    })
+                    dispatch(listDocuments(false))
+                }, 2000)
             }).catch(err => {
                 console.error(err)
                 dispatch({

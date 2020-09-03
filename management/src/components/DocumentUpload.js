@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import CloudUpload from '@material-ui/icons/CloudUpload';
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const FormContainer = styled.form`
   width: 100%;
@@ -27,7 +28,7 @@ function DocumentUpload(props) {
     const { onDocumentUpload, isUploading } = props
     const classes = useStyles();
 
-    const uploadText = isUploading ? 'Uploading...' : 'Upload'
+    const uploadText = isUploading ? 'Uploading' : 'Upload'
 
     return (
         <FormContainer>
@@ -42,7 +43,9 @@ function DocumentUpload(props) {
                 />
                 <label htmlFor="contained-button-file">
                     <Button variant="contained" color="primary" component="span" disabled={isUploading}>
-                        {uploadText}&nbsp;<CloudUpload />
+                        {uploadText}
+                        &nbsp;
+                        {isUploading ? (<CircularProgress size={20} />) : (<CloudUpload />)}
                     </Button>
                 </label>
             </div>

@@ -2,15 +2,14 @@ import * as actionTypes from '../actions/actionTypes'
 
 const initialState = {
     documents: [],
-    isListing: false,
+    isWorking: false,
     isUploading: false,
-    isDeleting: false,
     filterPhrase: ''
 }
 
 const filterDocuments = (documents, filterPhrase) => {
         const filteredDocuments = documents.map(document => {
-            document.isVisible = document.name.includes(filterPhrase)                
+            document.isVisible = document.name.toLowerCase().includes((filterPhrase || '').toLowerCase())                
             return document
         })
         return filteredDocuments
@@ -21,48 +20,51 @@ const reducer = (state = initialState, action) => {
         case actionTypes.LISTING_DOCUMENTS:
             return {
                 ...state,
-                isListing: true,
+                isWorking: true,
             }
         case actionTypes.LISTING_DOCUMENTS_SUCCESS:
             return {
                 ...state,
-                isListing: false,
-                documents: filterDocuments(action.payload, state.filterPhrase)
+                isWorking: false,
+                documents: filterDocuments(action.payload, state.filterPhrase),
             }
         case actionTypes.LISTING_DOCUMENTS_FAILURE:
             return {
                 ...state,
-                isListing: false,
+                isWorking: false,
             }
         case actionTypes.UPLOADING_DOCUMENT:
             return {
                 ...state,
-                isUploading: true
+                isWorking: true,
+                isUploading: true,
             }
         case actionTypes.UPLOAD_DOCUMENT_SUCCESS:
             return {
                 ...state,
+                isWorking: false,
                 isUploading: false,
             }
         case actionTypes.UPLOAD_DOCUMENT_FAILURE:
             return {
                 ...state,
+                isWorking: false,
                 isUploading: false,
             }
         case actionTypes.DELETE_DOCUMENT:
             return {
                 ...state,
-                isDeleting: true
+                isWorking: true,
             }
         case actionTypes.DELETE_DOCUMENT_SUCCESS:
             return {
                 ...state,
-                isDeleting: false,
+                isWorking: false,
             }
         case actionTypes.DELETE_DOCUMENT_FAILURE:
             return {
                 ...state,
-                isDeleting: false,
+                isWorking: false,
             }
         case actionTypes.PROCESSING_STATUS_UPDATE:
             const documents = state.documents.map(document => {
