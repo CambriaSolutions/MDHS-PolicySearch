@@ -1,9 +1,30 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+import React from 'react'
+import { createRenderer } from 'react-test-renderer/shallow'
+import App from './App'
+import Header from './containers/Header'
+import Dashboard from './containers/Dashboard'
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-  ReactDOM.unmountComponentAtNode(div);
-});
+const setup = propOverrides => {
+  const renderer = createRenderer()
+  renderer.render(<App />)
+  const output = renderer.getRenderOutput()
+  return output.props.children[0]
+}
+
+describe('components', () => {
+  describe('Header', () => {
+    it('should render', () => {
+      const output = setup()
+      const [header] = output.props.children
+      expect(header.type).toBe(Header)
+    })
+  })
+
+  describe('Dashboard', () => {
+    it('should render', () => {
+      const output = setup()
+      const [, mainSection] = output.props.children
+      expect(mainSection.type).toBe(Dashboard)
+    })
+  })
+})

@@ -7,8 +7,9 @@ const cloudSearchUpload = require('./cloudSearchUpload')
 const generateDeleteBatch = require('./generateDeleteBatch')
 const admin = require('firebase-admin')
 const storage = admin.storage()
+const db = admin.firestore()
 const cloudSearchEndpoint = process.env.CLOUD_SEARCH_ENDPOINT
-const recursiveDelete = require('./recursiveDelete')
+const pLimit = require('p-limit')
 
 exports = module.exports = functions
   .runWith({ memory: '2GB', timeoutSeconds: 540 })
@@ -96,7 +97,7 @@ exports = module.exports = functions
         force: true,
         prefix: outputPath,
       },
-      function(err) {
+      (err) => {
         if (err) {
           console.log(err)
         } else {
@@ -106,9 +107,15 @@ exports = module.exports = functions
     )
 
     // Delete collection in Firestore
-    const deleteResult = await recursiveDelete(`documents/${objectBasename}`)
+    const pages = await db.collection(`documents/${objectBasename}/pages`).get()
+    const removePageLimit = pLimit(100)
+    const removePagesPromises = []
+    pages.forEach(page => removePagesPromises.push(removePageLimit(() => page.ref.delete())))
+    await Promise.all(removePagesPromises)
+    await db.collection('documents').doc(objectBasename).delete()
+    
     console.log('Delete success: ' + JSON.stringify(deleteResult))
 
     fs.unlinkSync(tempDeleteBatchPath)
-    return
+    return null
   })
