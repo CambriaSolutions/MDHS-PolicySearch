@@ -25,7 +25,7 @@ module.exports = async (bucketName, docName, pageNum, pdfFile, imageFile) => {
                     pdfUrl: pdfUrl,
                     thumbUrl: imageUrl,
                 },
-                { merge: true }
+                { merge: true },
             )
     } catch (err) {
         console.log(`Error storing signatures: ${err.message}`, err.stack)
