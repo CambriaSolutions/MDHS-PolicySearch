@@ -81,7 +81,7 @@ async function logRequest(wasHelpful, feedbackList) {
         negativeFeedbackList: newNegativeFeedbackList,
         totalNumResponses: newTotalNumResponses,
       },
-      { merge: true }
+      { merge: true },
     )
   } catch (err) {
     console.error(err)

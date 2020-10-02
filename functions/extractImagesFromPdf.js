@@ -104,7 +104,7 @@ const extractImagesFromPdf = async (storageObject) => {
                     originalUploadDir,
                     'output',
                     originalPdfBasename,
-                    `${i}.pdf`
+                    `${i}.pdf`,
                 )
 
                 uploadPromises.push(
@@ -113,14 +113,14 @@ const extractImagesFromPdf = async (storageObject) => {
                             destination: singlePdf,
                             metadata: pdfMetadata,
                             validation: false,
-                        })
+                        }),
                     ))
 
                 const singlePng = path.join(
                     originalUploadDir,
                     'output',
                     originalPdfBasename,
-                    `thumb_${i}.png`
+                    `thumb_${i}.png`,
                 )
 
                 uploadPromises.push(
@@ -129,7 +129,7 @@ const extractImagesFromPdf = async (storageObject) => {
                             destination: singlePng,
                             metadata: imageMetadata,
                             validation: false,
-                        })
+                        }),
                     ))
 
                 pages[i] = { pdfFile: singlePdf, imageFile: singlePng }

@@ -1,8 +1,6 @@
 const AWS = require('aws-sdk')
 function cloudSearchUpload(batch) {
-  console.info(
-    `Starting upload of batch to CloudSearch with size ${batch.length}`
-  )
+  console.info(`Starting upload of batch to CloudSearch with size ${batch.length}`)
   return new Promise((resolve, reject) => {
     const uploadParams = {
       contentType: 'application/json',
